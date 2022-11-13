@@ -1,0 +1,24 @@
+recurrence formula : T(n) = T(n/3)+T(2n/3)+cn
+
+complexity (Iteration method) : 
+  * T(n/3) = T(n/3/3) + T(2n/3/3) + cn/3
+  * T(2n/3) = T(2n/3/3) + T(2*2n/3/3) + 2cn/3
+           
+
+    1st Iteration = ( T(n/9) + T(2n/9) + cn/3 ) + ( T(2n/9) + T(4n/9) + 2cn/3 ) + cn
+                  = T(n/9) + 2T(2n/9) + T(4n/9) + 2cn
+
+    T(n/9) = T(n/9/3) + T(2n/9/3) + cn/9
+           = T(n/27) + T(2n/27) + cn/9
+    T(2n/9) = T(2n/9/3) + T(2*2n/9/3) + 2cn/9 
+             = T(2n/27) + T(4n/27) + 2cn/9 
+    T(4n/9) = T(4n/9/3) + T(4*2n/9/3) + 4cn/9
+            = T(4n/27) + T(8n/27) + 4cn/9
+
+    2nd Iteration = (T(n/27) + T(2n/27) + cn/9) + 2( T(2n/27) + T(4n/27) + 2cn/9 ) + T(4n/27) + T(8n/27) + 4cn/9 + 2cn
+                  = T(n/27) + T(2n/27) + cn/9 + 2T(2n/27) + 2T(4n/27) + 4cn/9 + T(4n/27) + T(8n/27) + 4cn/9 + 2cn
+                              --------   ////   ---------   +++++++++   /////   ++++++++              /////   ///
+
+                  = T(n/27) + 3T(2n/27) + 3T(4n/27) + T(8n/27) + 3cn
+    
+    general formula = T(n / 3^(k+1)) + sum from i=0 -> i=k( (k+1) * T(2^i * n / 3^(k+1)) ) + T(2^(k+1) * n / 3^(k+1)) + (k+1)*cn

@@ -1,0 +1,12 @@
+Master method : 
+a = 2k
+b = 2k
+d = 0 
+
+side 1 :
+n*log(b)a = n*log(2k)2k = n
+
+side 2:
+n^0 = 1
+
+side 1 > side 2 : complexity = O(n)

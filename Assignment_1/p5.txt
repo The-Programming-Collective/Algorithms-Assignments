@@ -1,0 +1,6 @@
+using simple divide and conquer
+T(N) = 8T(N/2) + O(N^2)
+
+
+using strassen's method
+T(N) = 7T(N/2) +  O(N^2)
