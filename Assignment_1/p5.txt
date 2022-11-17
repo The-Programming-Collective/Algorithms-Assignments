@@ -1,6 +1,30 @@
 using simple divide and conquer
 T(N) = 8T(N/2) + O(N^2)
 
+using master method :
+a=8
+b=2
+d=1
 
-using strassen's method
-T(N) = 7T(N/2) +  O(N^2)
+side 1 :
+n^log(b)a = n^log(2)8 = n^3
+
+side 2 :
+n^d = n^1 = n
+
+side 1 > side 2 so complexity = O(n^3)
+
+PseudoCode for multiplication function :
+
+MatrixMultiplication(A,B)
+*   if n = A.numRows
+*   C = n*n matrix
+*   if(n==1):
+*       c11 = a11*b11
+*   else partition A,B,C:
+*       C11 = MatrixMultiplication(A11,B11)+MatrixMultiplication(A12,B21)
+*       C21 = MatrixMultiplication(A11,B12)+MatrixMultiplication(A12,B22)
+*       C21 = MatrixMultiplication(A22,B21)+MatrixMultiplication(A22,B21)
+*       C22 = MatrixMultiplication(A21,B12)+MatrixMultiplication(A22,B22)
+*   return C
+

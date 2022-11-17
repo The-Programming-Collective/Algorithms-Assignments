@@ -1,10 +1,12 @@
+T(0) = c1 , T(1)= c2 , T(n) = 2kT(n/2k) + (2k − 1)c3
+
 Master method : 
 a = 2k
 b = 2k
 d = 0 
 
 side 1 :
-n*log(b)a = n*log(2k)2k = n
+n^log(b)a = n^log(2k)2k = n
 
 side 2:
 n^0 = 1
