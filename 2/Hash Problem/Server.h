@@ -38,10 +38,14 @@ public:
             cout << "Credintials File opened!" << endl;
         file.close();
     }
+
+    // Destructor
     ~Server()
     {
         delete[] table;
     }
+
+    // Function to load credentials from an existing credential file
     void load_credentials()
     {
         ifstream tempFile(credentials_file_path, ios::in);
@@ -53,11 +57,16 @@ public:
         }
         tempFile.close();
     }
+
+    // Function to store all new or changed credentials in the credentials file
     void store_credentials()
     {
         vector<int> tempV;
         ifstream tempFile(credentials_file_path, ios::in);
         string indx, fileName;
+
+        // Takes all credential file content and checks for change
+        // In order to only appends new credentials
         if (tempFile.is_open())
         {
             while (tempFile >> indx >> fileName)
@@ -75,10 +84,12 @@ public:
         tempFile.close();
         file.close();
     }
+
+    // Hash function to return a hashed index from username and password
     int Hash(string un, string ps)
     {
-        unsigned long long temp1 = 0;
-        unsigned long long temp2 = 0;
+        unsigned long long int temp1 = 0;
+        unsigned long long int temp2 = 0;
         int result = 0;
         for (int i = 0; i < un.size(); i++)
         {
@@ -91,7 +102,20 @@ public:
         result = (temp1 + temp2) % table_size;
         return result;
     }
-    bool insert_secret_notes(string un, string ps, string sN)
+
+    /*!
+     * @function    Insert a secret note.
+     *
+     * @brief       This function takes a user name and password
+     *              and creates a file if a file doesnt already exist
+     *              and inserts a secret note into it.
+     *
+     * @param       un    Username for an account.
+     * @param       ps    Password for account.
+     * @param       sN    Secret note to be inserted.
+     *
+     */
+    void insert_secret_notes(string un, string ps, string sN)
     {
         int indx = Hash(un, ps);
         try
@@ -113,68 +137,100 @@ public:
                 tempFile.close();
             }
             store_credentials();
-            return 1;
         }
         catch (const std::exception &e)
         {
-            cout<<"Error occured"<<endl;
-            return 0;
+            cout << "Error occured" << endl;
         }
     }
-    bool show_secret_notes(string un, string ps)
+
+    /*!
+     * @function    Show secret note contents
+     *
+     * @brief       This function takes a user name and password
+     *              and if the credentials match an account
+     *              presents its contents.
+     *
+     * @param       un    Username for an account.
+     * @param       ps    Password for account.
+     *
+     */
+    void show_secret_notes(string un, string ps)
     {
         int indx = Hash(un, ps);
         if (table[indx] == "NULL")
         {
             cout << "Invalid credentials" << endl;
-            return 0;
         }
         else
         {
             cout << "Username and passwords match for file: " << table[indx] << endl;
             ifstream tempFile(to_string(indx) + ".txt", ios::in);
             string secretNote;
+            cout << "Contents: " << endl;
             while (tempFile >> secretNote)
                 cout << secretNote << endl;
             tempFile.close();
-            return 1;
         }
     }
+
+    /*!
+     * @function    Delete a secret note
+     *
+     * @brief       This function takes a user name and password
+     *              and deletes the file containing the secret
+     *              and updates the credentials file
+     *
+     * @param       un    Username for an account.
+     * @param       ps    Password for account.
+     *
+     */
     void delete_secret_notes(string un, string ps)
     {
         int indx = Hash(un, ps);
-        string deleteLine = to_string(indx) + " " + to_string(indx) + ".txt";
-        string line;
-        ifstream inFile(credentials_file_path);
-        ofstream outFile("temp.txt");
-        vector<string> tempV;
-        try
+        if (table[indx] != "NULL")
         {
-            while (getline(inFile, line))
-                tempV.push_back(line);
-            for (int i = 0; i < tempV.size(); i++)
+            string deleteLine = to_string(indx) + " " + to_string(indx) + ".txt";
+            string line;
+            ifstream inFile(credentials_file_path);
+            ofstream outFile("temp.txt");
+            vector<string> tempV;
+            try
             {
-                if (tempV[i] != deleteLine)
-                    outFile << tempV[i] << endl;
+                while (getline(inFile, line))
+                    tempV.push_back(line);
+                for (int i = 0; i < tempV.size(); i++)
+                {
+                    if (tempV[i] != deleteLine)
+                        outFile << tempV[i] << endl;
+                }
+                inFile.close();
+                outFile.close();
+
+                // Required conversion for remove function to work properly (from string to char array)
+                // The previous conversions casted both file paths into char arrays
+                // The conversions were used to delete the secret file and update the credentials file
+                const char oldName[] = "temp.txt";
+                const char *x = credentials_file_path.c_str();
+                const char *y = (to_string(indx) + ".txt").c_str();
+                remove(x);
+                rename(oldName, x);
+                remove(y);
+                table[indx] = "NULL";
+                cout << "Secrets have been deleted!" << endl;
             }
-            inFile.close();
-            outFile.close();
-            //
-            // required conversion for remove function to work properly (from string to char array)
-            // the previous conversions casted both file paths into char arrays
-            const char oldName[] = "temp.txt";
-            const char *x = credentials_file_path.c_str();
-            const char *y = (to_string(indx) + ".txt").c_str();
-            remove(x);
-            rename(oldName, x);
-            remove(y);
-            cout << "Secrets have been deleted!" << endl;
+            catch (const std::exception &e)
+            {
+                cout << "Failed operation." << endl;
+            }
         }
-        catch (const std::exception &e)
+        else
         {
             cout << "Failed operation." << endl;
         }
     }
+
+    // print function for testing
     void print()
     {
         for (int i = 0; i < table_size; i++)
