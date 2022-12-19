@@ -8,11 +8,10 @@ int main()
 {
     Server s("credentials.txt");
     int choice;
-    bool flag = true;
     string userName;
     string password;
     string secretNote;
-    while (flag)
+    do
     {
         cout << "Please choose an action to continue :\n";
         cout << "1. Insert secret notes\n";
@@ -47,10 +46,9 @@ int main()
             cin >> password;
             s.delete_secret_notes(userName, password);
             break;
-        case 4:
-            flag = false;
-            break;
+        default:
+            cout<<"Invalid choice."<<endl;
         }
-    }
+    } while (choice != 4);
     return 0;
 }

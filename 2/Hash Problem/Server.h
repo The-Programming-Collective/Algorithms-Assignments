@@ -88,19 +88,11 @@ public:
     // Hash function to return a hashed index from username and password
     int Hash(string un, string ps)
     {
-        unsigned long long int temp1 = 0;
-        unsigned long long int temp2 = 0;
-        int result = 0;
-        for (int i = 0; i < un.size(); i++)
-        {
-            temp1 = temp1 + (int(un[i]) * pow(263, i));
-        }
-        for (int i = 0; i < ps.size(); i++)
-        {
-            temp2 = temp2 + (int(ps[i]) * pow(263, i));
-        }
-        result = (temp1 + temp2) % table_size;
-        return result;
+        string temp = un + ps;
+        unsigned long long int hash = 0;
+        for (int i = 0; i < (temp).length(); i++)
+            hash += static_cast<int>(temp[i]) * pow(263, i);
+        return hash % table_size;
     }
 
     /*!
@@ -124,6 +116,7 @@ public:
             if (tempFile.fail())
             {
                 cout << "Secret File created and secret note inserted!" << endl;
+                cout << endl;
                 ofstream tempFile(to_string(indx) + ".txt", ios::out | ios::trunc);
                 table[indx] = to_string(indx) + ".txt";
                 tempFile << sN << endl;
@@ -132,6 +125,7 @@ public:
             else
             {
                 cout << "Secret File opened and secret note inserted!" << endl;
+                cout << endl;
                 ofstream tempFile(to_string(indx) + ".txt", ios::app);
                 tempFile << sN << endl;
                 tempFile.close();
@@ -141,6 +135,7 @@ public:
         catch (const std::exception &e)
         {
             cout << "Error occured" << endl;
+            cout << endl;
         }
     }
 
@@ -161,6 +156,7 @@ public:
         if (table[indx] == "NULL")
         {
             cout << "Invalid credentials" << endl;
+            cout << endl;
         }
         else
         {
@@ -171,6 +167,7 @@ public:
             while (tempFile >> secretNote)
                 cout << secretNote << endl;
             tempFile.close();
+            cout << endl;
         }
     }
 
@@ -218,15 +215,18 @@ public:
                 remove(y);
                 table[indx] = "NULL";
                 cout << "Secrets have been deleted!" << endl;
+                cout << endl;
             }
             catch (const std::exception &e)
             {
                 cout << "Failed operation." << endl;
+                cout << endl;
             }
         }
         else
         {
             cout << "Failed operation." << endl;
+            cout << endl;
         }
     }
 
