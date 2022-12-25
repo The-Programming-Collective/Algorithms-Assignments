@@ -3,7 +3,8 @@ using namespace std;
 
 string LPsubString(string word){
 
-    int start = 1;
+    //keeps track of the start index and the length of the palindrome subString
+    int start = 0;
     int length = 1;
     bool matrix[word.size()][word.size()];
 
@@ -29,17 +30,22 @@ string LPsubString(string word){
     }
 
     //check from 3 to the end of the string
-    for (int subSize = 3; subSize <= word.size(); subSize++) {
+    for (int subLength = 3; subLength <= word.size(); subLength++) {
 
-        for (int subStart = 0; subStart < word.size() - subSize + 1; subStart++) {
-            int subEnd = subStart + subSize - 1;
+        //check from the subStart to subEnd
+        for (int subStart = 0; subStart < word.size() - subLength + 1; subStart++) {
+            int subEnd = subStart + subLength - 1;
 
-            if (matrix[subStart + 1][subEnd - 1] && word[subStart] == word[subEnd]) {
+            //if start and end chars are equal
+            //and if the middle part is a palindrome
+            if (word[subStart] == word[subEnd] && matrix[subStart + 1][subEnd - 1]) {
                 matrix[subStart][subEnd] = true;
 
-                if (subSize > length) {
+                //if a longer palindromic subString is found
+                //set the start and the length
+                if (subLength > length) {
                     start = subStart;
-                    length = subSize;
+                    length = subLength;
                 }
             }
         }
